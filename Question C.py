@@ -4,7 +4,17 @@ from multiprocessing import pool
 
 
 class DistributedLRUCache:
-    """implemented points 1, 3, 4, 6. Did not know how to do 2 and 5"""
+    """Simple LRU cache implemented using ordered dictionary to keep track of last used"""
+    # Implemented points 1, 3, 4, 6
+    # 1 - This implementation require no 3rd party packages. All resources are built in
+    # 2 - resilient to network failures could be done by backing up the cache every so often
+    # 3 - Dictionaries are hashmaps, this gives average O(1) time of reading and writing
+    # 4 - Having methods to merge dictionaries between two different caches ensure data consistency in the cache
+    # 5 - Locality reference can be done by having a large hash distributed across regions and have clients compute
+    #     a hash to determine which server to use. This gives a simple form of scalable sharding
+    # 6 - Dictionary values can be of any time, however keys must be immutable. This should be flexible for most uses
+    # 7 - Cache can expire on a timeout. However cache will be cleared only at the next mutating operation, and may
+    #     still claim memory before that
     def __init__(self, size, timeout):
         """constructor"""
         self.size = size
